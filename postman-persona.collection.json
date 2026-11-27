@@ -1,0 +1,97 @@
+{
+  "info": {
+    "_postman_id": "90eaafc1-13cf-4a70-b056-f69b11577a37",
+    "name": "Biblioteca API - Persona",
+    "description": "Pruebas CRUD del recurso Persona. Inicia NestJS en localhost:3000 antes de enviar las solicitudes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "personaId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Personas",
+      "item": [
+        {
+          "name": "Crear persona",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const persona = pm.response.json();",
+                  "  if (persona.id_persona) pm.collectionVariables.set('personaId', persona.id_persona);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Ana\",\n  \"apellidos\": \"Perez\",\n  \"identificacion\": \"PRUEBA-001\",\n  \"correo\": \"ana.prueba@example.com\",\n  \"telefono\": \"0991234567\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/persona",
+            "description": "Crea una persona y guarda su UUID en personaId. Cambia identificacion si ya existe en la base de datos."
+          }
+        },
+        {
+          "name": "Listar personas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/persona"
+          }
+        },
+        {
+          "name": "Obtener persona por UUID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/persona/{{personaId}}"
+          }
+        },
+        {
+          "name": "Actualizar teléfono",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"0987654321\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/persona/{{personaId}}"
+          }
+        },
+        {
+          "name": "Eliminar persona",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/persona/{{personaId}}"
+          }
+        },
+        {
+          "name": "Validación - correo inválido (espera HTTP 400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Carlos\",\n  \"apellidos\": \"Lopez\",\n  \"identificacion\": \"PRUEBA-002\",\n  \"correo\": \"correo-invalido\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/persona"
+          }
+        }
+      ]
+    }
+  ]
+}
